@@ -1,4 +1,6 @@
 const possibleY = [57, 140, 223];
+const possibleX = [0, 101, 202, 303, 404];
+const possibleGem = ["images/Gem Green.png" , "images/Gem Blue.png" , "images/Gem Orange.png"];
 let result = 0;
 const score = document.querySelector(".score_value");
 
@@ -28,7 +30,7 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-//
+// Player
 var Player = function() {
     this.sprite = 'images/char-boy.png';
 };
@@ -82,6 +84,31 @@ Player.prototype.start = function() {
   this.x = 202;
   this.y = 389;
 }
+
+// Cristals
+var Cristal = function() {
+    randY = Math.random() * 2.99;
+    randX = Math.random() * 4.99;
+    randGem = Math.random();
+    this.y = possibleY[Math.floor(randY)];
+    this.x = possibleX[Math.floor(randX)];
+    if (randGem < 0.9) {
+      this.sprite = randGem < 0.6 ? possibleGem[0] : possibleGem[1];
+    } else {
+      this.sprite = possibleGem[2];
+    }
+};
+
+// Update the enemy's position, required method for game
+// Parameter: dt, a time delta between ticks
+Cristal.prototype.update = function() {
+
+};
+
+// Draw the enemy on the screen, required method for game
+Cristal.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
 
 var allEnemies = declareEnemies(3);
 var player = new Player();
