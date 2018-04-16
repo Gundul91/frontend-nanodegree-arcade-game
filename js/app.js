@@ -1,6 +1,7 @@
 const possibleY = [57, 140, 223];
 const possibleX = [0, 101, 202, 303, 404];
 const possibleGem = ["images/Gem Green.png" , "images/Gem Blue.png" , "images/Gem Orange.png"];
+let gemPoints = 0;
 let result = 0;
 const score = document.querySelector(".score_value");
 
@@ -39,8 +40,12 @@ var Player = function() {
 Player.prototype.update = function() {
   if (this.y < 57) {
     this.start();
-    result++;
+    result+= 1 + gemPoints;
+    gemPoints = 0;
     score.textContent = result;
+    allGem.forEach(function (gem) {
+      gem.start();
+    });
   }
 
   allEnemies.forEach(function (enemie) {
@@ -48,6 +53,7 @@ Player.prototype.update = function() {
       this.start();
       result = result > 0 ? result-1 : 0;
       score.textContent = result;
+      gemPoints = 0;
     }
   }, this);
 
@@ -86,32 +92,60 @@ Player.prototype.start = function() {
 }
 
 // Cristals
-var Cristal = function() {
-    randY = Math.random() * 2.99;
-    randX = Math.random() * 4.99;
-    randGem = Math.random();
-    this.y = possibleY[Math.floor(randY)];
-    this.x = possibleX[Math.floor(randX)];
-    if (randGem < 0.9) {
-      this.sprite = randGem < 0.6 ? possibleGem[0] : possibleGem[1];
-    } else {
-      this.sprite = possibleGem[2];
-    }
+var Gem = function() {
+    this.start();
 };
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
-Cristal.prototype.update = function() {
-
+Gem.prototype.update = function() {
+  if (allGem[0].x == allGem[1].x && allGem[0].y == allGem[1].y) {
+    this.start();
+  }
+  if (allGem[1].y < allGem[0].y) {
+    let tmpGem = allGem[0];
+    allGem[0] = allGem[1];
+    allGem[1] = tmpGem;
+  }
+  if (this.x == player.x && this.y == player.y) {
+    switch(this.sprite) {
+      case possibleGem[0]:
+        gemPoints+=1;
+        break;
+      case possibleGem[1]:
+        gemPoints+=3;
+        break;
+      case possibleGem[2]:
+        gemPoints+=8;
+        break;
+    }
+    this.x+=1000;
+    this.y+=1000;
+  }
 };
 
 // Draw the enemy on the screen, required method for game
-Cristal.prototype.render = function() {
+Gem.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+//
+Gem.prototype.start = function() {
+  randGem = Math.random();
+  if (randGem < 0.9) {
+    this.sprite = randGem < 0.6 ? possibleGem[0] : possibleGem[1];
+  } else {
+    this.sprite = possibleGem[2];
+  }
+  randY = Math.random() * 2.99;
+  randX = Math.random() * 4.99;
+  this.y = possibleY[Math.floor(randY)];
+  this.x = possibleX[Math.floor(randX)];
 };
 
 var allEnemies = declareEnemies(3);
 var player = new Player();
+let allGem = [new Gem(), new Gem()];
 
 // Function that get the number of enemis and return an array of "Enemy"s
 function declareEnemies(size) {
