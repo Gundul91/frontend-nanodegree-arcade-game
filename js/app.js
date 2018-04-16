@@ -30,7 +30,6 @@ Enemy.prototype.render = function() {
 
 //
 var Player = function() {
-    this.start();
     this.sprite = 'images/char-boy.png';
 };
 
@@ -106,4 +105,13 @@ document.addEventListener('keyup', function(e) {
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
+});
+
+let avatarSelector = document.querySelector(".avatars");
+let cover = document.querySelector(".cover");
+
+avatarSelector.addEventListener('click', function(e) {
+    player.sprite = e.path[0].getAttribute("src");
+    player.start();
+    cover.style.display = "none";
 });
