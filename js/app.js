@@ -41,11 +41,16 @@ Enemy.prototype.render = function() {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var en1 = new Enemy();
-var en2 = new Enemy();
-var en3 = new Enemy();
-var allEnemies = [en1, en2, en3];
+var allEnemies=declareEnemies(3);
 var player = new Enemy();
+
+// Function that get the number of enemis and return an array of "Enemy"s
+function declareEnemies(size) {
+  let enArray = new Array(size);
+  for(let i=0; i<size; i++)
+    enArray[i] = new Enemy();
+  return enArray;
+}
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
