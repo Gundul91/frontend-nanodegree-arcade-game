@@ -33,16 +33,63 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
+//
+var Player = function() {
+    this.x=202;
+    this.y=389;
+    this.sprite = 'images/char-boy.png';
+};
+
+// Update the player position
+Player.prototype.update = function(dt) {
+  if(this.y<57)
+    this.start();
+  allEnemies.forEach(function (enemie) {
+    if(enemie.y==this.y && enemie.x>(this.x-50) && enemie.x<(this.x+50)){
+      this.start();
+    }
+  }, this);
+};
+
+// Draw the player on the screen
+Player.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+// Handle input for player's movement
+Player.prototype.handleInput = function(direction) {
+  console.log(this.x  + "/" + this.y);
+    switch(direction){
+      case "left":
+        if(this.x>0)
+          this.x-=101;
+        break;
+      case "right":
+        if(this.x<404)
+          this.x+=101;
+        break;
+      case "up":
+        if(this.y>0)
+          this.y-=83;
+        break;
+      case "down":
+        if(this.y<389)
+          this.y+=83;
+        break;
+    }
+};
+
+Player.prototype.start = function() {
+  this.x=202;
+  this.y=389;
+}
 
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var allEnemies=declareEnemies(3);
-var player = new Enemy();
+var allEnemies = declareEnemies(3);
+var player = new Player();
 
 // Function that get the number of enemis and return an array of "Enemy"s
 function declareEnemies(size) {
