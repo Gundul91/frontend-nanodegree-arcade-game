@@ -11,13 +11,17 @@ body {
     background-color: rgba(113, 109, 109, 0.7);
 }
 
-.avatars {
+.avatars, .result-level {
     display: flex;
     margin: 300px auto;
     width: 505px;
     height: 171px;
     background-color: white;
     border-radius: 5px;
+}
+
+.result-level {
+  display: none;
 }
 
 .avatars>img {
@@ -32,12 +36,12 @@ body {
     margin: 0 auto;
 }
 
-.score {
+.score, .lifes {
+    flex : 1;
     font-size: 1.5em;
     font-weight: bold;
 }
 
-.score_value {
+.score_value, .lifes_value {
     text-align: center;
-    float: right;
 }

@@ -3,7 +3,13 @@ const possibleX = [0, 101, 202, 303, 404];
 const possibleGem = ["images/Gem Green.png" , "images/Gem Blue.png" , "images/Gem Orange.png"];
 let gemPoints = 0;
 let result = 0;
+let lifes = 3;
+let level = 1;
+
 const score = document.querySelector(".score_value");
+const result_level = document.querySelector(".result-level");
+const lifes_value = document.querySelector(".lifes_value");
+const bugs_value = document.querySelector(".bugs_value");
 
 // Enemies our player must avoid
 var Enemy = function() {
@@ -46,6 +52,14 @@ Player.prototype.update = function() {
     allGem.forEach(function (gem) {
       gem.start();
     });
+    if(result>25 && allEnemies.length < 4){
+      bugs_value.textContent++; 
+      allEnemies.push(new Enemy());
+    } else if(result>60 && allEnemies.length < 5){
+      allEnemies.push(new Enemy());
+    } else if(result>100 && allEnemies.length < 6){
+      allEnemies.push(new Enemy());
+    }
   }
 
   allEnemies.forEach(function (enemie) {
@@ -54,6 +68,13 @@ Player.prototype.update = function() {
       result = result > 0 ? result-1 : 0;
       score.textContent = result;
       gemPoints = 0;
+      lifes--;
+      lifes_value.textContent = lifes;
+      if (lifes == 0) {
+          result_level.textContent = level;
+          cover.style.display = "block";
+          result_level.style.display = "block";
+      }
     }
   }, this);
 
@@ -175,4 +196,5 @@ avatarSelector.addEventListener('click', function(e) {
     player.sprite = e.path[0].getAttribute("src");
     player.start();
     cover.style.display = "none";
+    this.style.display = "none";
 });
