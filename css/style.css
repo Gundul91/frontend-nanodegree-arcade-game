@@ -11,7 +11,7 @@ body {
     background-color: rgba(113, 109, 109, 0.7);
 }
 
-.avatars, .result-level {
+.avatars, .result {
     display: flex;
     margin: 300px auto;
     width: 505px;
@@ -20,7 +20,7 @@ body {
     border-radius: 5px;
 }
 
-.result-level {
+.result {
   display: none;
 }
 
@@ -36,12 +36,13 @@ body {
     margin: 0 auto;
 }
 
-.score, .lifes {
-    flex : 1;
-    font-size: 1.5em;
-    font-weight: bold;
+.info img {
+  height: 70px;
 }
 
-.score_value, .lifes_value {
+.info>span {
+    flex : 1;
+    font-size: 3.5em;
+    font-weight: bold;
     text-align: center;
 }

@@ -5,9 +5,11 @@ let gemPoints = 0;
 let result = 0;
 let lifes = 3;
 let level = 1;
+let block_game = false;
 
 const score = document.querySelector(".score_value");
-const result_level = document.querySelector(".result-level");
+const result_box = document.querySelector(".result");
+const result_level = document.querySelector(".result_level");
 const lifes_value = document.querySelector(".lifes_value");
 const bugs_value = document.querySelector(".bugs_value");
 
@@ -46,18 +48,20 @@ var Player = function() {
 Player.prototype.update = function() {
   if (this.y < 57) {
     this.start();
-    result+= 1 + gemPoints;
+    result += gemPoints;
     gemPoints = 0;
     score.textContent = result;
     allGem.forEach(function (gem) {
       gem.start();
     });
     if(result>25 && allEnemies.length < 4){
-      bugs_value.textContent++; 
+      bugs_value.textContent++;
       allEnemies.push(new Enemy());
-    } else if(result>60 && allEnemies.length < 5){
+    } else if(result > 60 && allEnemies.length < 5){
+      bugs_value.textContent++;
       allEnemies.push(new Enemy());
-    } else if(result>100 && allEnemies.length < 6){
+    } else if(result > 100 && allEnemies.length < 6){
+      bugs_value.textContent++;
       allEnemies.push(new Enemy());
     }
   }
@@ -73,7 +77,8 @@ Player.prototype.update = function() {
       if (lifes == 0) {
           result_level.textContent = level;
           cover.style.display = "block";
-          result_level.style.display = "block";
+          result_box.style.display = "block";
+          block_game = true;
       }
     }
   }, this);
@@ -87,23 +92,25 @@ Player.prototype.render = function() {
 
 // Handle input for player's movement
 Player.prototype.handleInput = function(direction) {
-    switch(direction){
-      case "left":
-        if (this.x > 0)
-          this.x -= 101;
-        break;
-      case "right":
-        if (this.x < 404)
-          this.x += 101;
-        break;
-      case "up":
-        if (this.y > 0)
-          this.y -= 83;
-        break;
-      case "down":
-        if (this.y < 389)
-          this.y += 83;
-        break;
+    if (block_game == false) {
+        switch(direction){
+          case "left":
+            if (this.x > 0)
+              this.x -= 101;
+            break;
+          case "right":
+            if (this.x < 404)
+              this.x += 101;
+            break;
+          case "up":
+            if (this.y > 0)
+              this.y -= 83;
+            break;
+          case "down":
+            if (this.y < 389)
+              this.y += 83;
+            break;
+        }
     }
 };
 
