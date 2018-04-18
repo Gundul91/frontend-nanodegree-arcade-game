@@ -1,17 +1,21 @@
 const possibleY = [57, 140, 223];
 const possibleX = [0, 101, 202, 303, 404];
 const possibleGem = ["images/Gem Green.png" , "images/Gem Blue.png" , "images/Gem Orange.png"];
+
 let gemPoints = 0;
 let result = 0;
 let lifes = 3;
-let level = 1;
 let block_game = false;
 
-const score = document.querySelector(".score_value");
 const result_box = document.querySelector(".result");
-const result_level = document.querySelector(".result_level");
+
+const score = document.querySelector(".score_value");
 const lifes_value = document.querySelector(".lifes_value");
 const bugs_value = document.querySelector(".bugs_value");
+
+const result_score_value = document.querySelector(".result_score_value");
+const result_lifes_value = document.querySelector(".result_lifes_value");
+const result_bugs_value = document.querySelector(".result_bugs_value");
 
 // Enemies our player must avoid
 var Enemy = function() {
@@ -44,7 +48,7 @@ var Player = function() {
     this.sprite = 'images/char-boy.png';
 };
 
-// Update the player position
+// Update the player position  when arrive at the water or hit a bug
 Player.prototype.update = function() {
   if (this.y < 57) {
     this.start();
@@ -54,7 +58,7 @@ Player.prototype.update = function() {
     allGem.forEach(function (gem) {
       gem.start();
     });
-    if(result>25 && allEnemies.length < 4){
+    if(result > 25 && allEnemies.length < 4){
       bugs_value.textContent++;
       allEnemies.push(new Enemy());
     } else if(result > 60 && allEnemies.length < 5){
@@ -75,7 +79,7 @@ Player.prototype.update = function() {
       lifes--;
       lifes_value.textContent = lifes;
       if (lifes == 0) {
-          result_level.textContent = level;
+          result_score_value.textContent = result;
           cover.style.display = "block";
           result_box.style.display = "block";
           block_game = true;
@@ -91,9 +95,10 @@ Player.prototype.render = function() {
 };
 
 // Handle input for player's movement
+// Parameter: direction, a string with the direction clicked
 Player.prototype.handleInput = function(direction) {
     if (block_game == false) {
-        switch(direction){
+        switch(direction) {
           case "left":
             if (this.x > 0)
               this.x -= 101;
@@ -114,6 +119,7 @@ Player.prototype.handleInput = function(direction) {
     }
 };
 
+// Place player in the start position
 Player.prototype.start = function() {
   this.x = 202;
   this.y = 389;
@@ -124,8 +130,7 @@ var Gem = function() {
     this.start();
 };
 
-// Update the enemy's position, required method for game
-// Parameter: dt, a time delta between ticks
+// Place the cristals
 Gem.prototype.update = function() {
   if (allGem[0].x == allGem[1].x && allGem[0].y == allGem[1].y) {
     this.start();
@@ -138,27 +143,27 @@ Gem.prototype.update = function() {
   if (this.x == player.x && this.y == player.y) {
     switch(this.sprite) {
       case possibleGem[0]:
-        gemPoints+=1;
+        gemPoints += 1;
         break;
       case possibleGem[1]:
-        gemPoints+=3;
+        gemPoints += 3;
         break;
       case possibleGem[2]:
-        gemPoints+=8;
+        gemPoints += 8;
         break;
     }
-    this.x+=1000;
-    this.y+=1000;
+    this.x += 1000;
+    this.y += 1000;
   }
 };
 
-// Draw the enemy on the screen, required method for game
-Gem.prototype.render = function() {
+// Draw the Cristals on the screen
+Gem.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-//
-Gem.prototype.start = function() {
+// Choose ramdomly the cristals
+Gem.prototype.start = function () {
   randGem = Math.random();
   if (randGem < 0.9) {
     this.sprite = randGem < 0.6 ? possibleGem[0] : possibleGem[1];
@@ -175,7 +180,7 @@ var allEnemies = declareEnemies(3);
 var player = new Player();
 let allGem = [new Gem(), new Gem()];
 
-// Function that get the number of enemis and return an array of "Enemy"s
+// Function that get the number of enemis and return an array of Enemys
 function declareEnemies(size) {
   let enArray = new Array(size);
   for(let i = 0; i < size; i++)
@@ -185,7 +190,7 @@ function declareEnemies(size) {
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method.
-document.addEventListener('keyup', function(e) {
+document.addEventListener('keyup', function (e) {
     var allowedKeys = {
         37: 'left',
         38: 'up',
@@ -199,7 +204,8 @@ document.addEventListener('keyup', function(e) {
 let avatarSelector = document.querySelector(".avatars");
 let cover = document.querySelector(".cover");
 
-avatarSelector.addEventListener('click', function(e) {
+// Listener for the choice of the avatar
+avatarSelector.addEventListener('click', function (e) {
     player.sprite = e.path[0].getAttribute("src");
     player.start();
     cover.style.display = "none";

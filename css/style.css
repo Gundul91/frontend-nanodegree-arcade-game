@@ -1,5 +1,6 @@
 body {
     text-align: center;
+    font-family: 'Luckiest Guy', cursive;
 }
 
 .cover {
@@ -20,19 +21,23 @@ body {
     border-radius: 5px;
 }
 
-.result {
-  display: none;
-}
-
-.avatars>img {
+.avatars > img {
   flex: 1;
   cursor: pointer;
+}
+
+.result {
+  height: 220px;
+  width: 350px;
+  display: none;
+  font-size: 6em;
+  font-weight: bold;
+  line-height: 220px;
 }
 
 .info {
     display: flex;
     width: 505px;
-    border: solid red 1px;
     margin: 0 auto;
 }
 
@@ -40,9 +45,10 @@ body {
   height: 70px;
 }
 
-.info>span {
-    flex : 1;
+.info > span {
+    flex: 1;
     font-size: 3.5em;
     font-weight: bold;
     text-align: center;
+    line-height: 100px;
 }
