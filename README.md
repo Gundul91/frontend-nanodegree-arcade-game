@@ -1,6 +1,6 @@
-frontend-nanodegree-arcade-game
-===============================
+#frontend-nanodegree-arcade-game
 
-Students should use this [rubric](https://review.udacity.com/#!/projects/2696458597/rubric) for self-checking their submission. Make sure the functions you write are **object-oriented** - either class functions (like Player and Enemy) or class prototype functions such as Enemy.prototype.checkCollisions, and that the keyword 'this' is used appropriately within your class and class prototype functions to refer to the object the function is called upon. Also be sure that the **readme.md** file is updated with your instructions on both how to 1. Run and 2. Play your arcade game.
+##Instruction
 
-For detailed instructions on how to get started, check out this [guide](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true).
+In the first screen the player has to chose an avatar, then he as to use the arrows to move the player and try to take the gems without hit the bugs and arrive to the water. Every time he arrive to the water after he take some gems he get points (green=1, blue=3, orange=8) and restart from the start point with 2 new gems on the road instead if he hit a bug he lose the gems taken, 1 point and 1 life. When he reach 26/61/101 points the number of bugs is increases by one. After he lose all the lifes the game end and a windows show the number of point reached.
+
