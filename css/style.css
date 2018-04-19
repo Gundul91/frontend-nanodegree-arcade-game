@@ -12,7 +12,8 @@ body {
     background-color: rgba(113, 109, 109, 0.7);
 }
 
-.avatars, .result {
+.avatars,
+.result {
     display: flex;
     margin: 300px auto;
     width: 505px;
@@ -22,17 +23,17 @@ body {
 }
 
 .avatars > img {
-  flex: 1;
-  cursor: pointer;
+    flex: 1;
+    cursor: pointer;
 }
 
 .result {
-  height: 220px;
-  width: 350px;
-  display: none;
-  font-size: 6em;
-  font-weight: bold;
-  line-height: 220px;
+    height: 220px;
+    width: 350px;
+    display: none;
+    font-size: 6em;
+    font-weight: bold;
+    line-height: 220px;
 }
 
 .info {
@@ -42,7 +43,7 @@ body {
 }
 
 .info img {
-  height: 70px;
+    height: 70px;
 }
 
 .info > span {
