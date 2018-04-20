@@ -1,3 +1,4 @@
+'use strict';
 const possibleY = [57, 140, 223];
 const possibleX = [0, 101, 202, 303, 404];
 const possibleGem = ["images/Gem Green.png" , "images/Gem Blue.png" , "images/Gem Orange.png"];
@@ -14,166 +15,172 @@ const lifes_value = document.querySelector(".lifes_value");
 const bugs_value = document.querySelector(".bugs_value");
 
 const result_score_value = document.querySelector(".result_score_value");
-const result_lifes_value = document.querySelector(".result_lifes_value");
-const result_bugs_value = document.querySelector(".result_bugs_value");
+
+//Base class fo all the entityes (Player, Enemys, Gems)
+class Entity {
+    render() {
+        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    }
+}
 
 // Enemies our player must avoid
-const Enemy = function() {
-    let randY = 1;
-    this.x = 520;
-    this.y = "";
-    this.sprite = 'images/enemy-bug.png';
-};
-
-// Update the enemy's position, required method for game
-// Parameter: dt, a time delta between ticks
-Enemy.prototype.update = function(dt) {
-    if (this.x < 520) {
-        this.x += dt * 150 * this.speed;
-    } else {
-        this.x = -105
-        randY = Math.random() * 2.99;
-        this.speed = 1 + Math.random() * 2.99;
-        this.y = possibleY[Math.floor(randY)];
+class Enemy extends Entity {
+    constructor() {
+        super();
+        this.x = 520;
+        this.y = "";
+        this.sprite = 'images/enemy-bug.png';
     }
-};
 
-// Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
+    // Update the enemy's position, required method for game
+    // Parameter: dt, a time delta between ticks
+    update(dt) {
+        // if is yet in the road continue to move
+        if (this.x < 520) {
+            this.x += dt * 150 * this.speed;
+        } else { // if arrive to the end return to the left
+            this.x = -105
+            let randY = Math.random() * 2.99;
+            this.speed = 1 + Math.random() * 2.99;
+            this.y = possibleY[Math.floor(randY)];
+        }
+    }
+}
 
 // Player
-const Player = function() {
-    this.sprite = 'images/char-boy.png';
-};
-
-// Update the player position  when arrive at the water or hit a bug
-Player.prototype.update = function() {
-    if (this.y < 57) {
-        this.start();
-        result += gemPoints;
-        gemPoints = 0;
-        score.textContent = result;
-        allGem.forEach(function(gem) {
-            gem.start();
-        });
-        if (result > 25 && allEnemies.length < 4) {
-            bugs_value.textContent++;
-            allEnemies.push(new Enemy());
-        } else if (result > 60 && allEnemies.length < 5) {
-            bugs_value.textContent++;
-            allEnemies.push(new Enemy());
-        } else if (result > 100 && allEnemies.length < 6) {
-            bugs_value.textContent++;
-            allEnemies.push(new Enemy());
-        }
+class Player extends Entity {
+    constructor() {
+        super();
+        this.sprite = 'images/char-boy.png';
     }
 
-    allEnemies.forEach(function(enemie) {
-        if(enemie.y == this.y && enemie.x > (this.x - 50) && enemie.x < (this.x + 50)){
-            this.start();
-            result = result > 0 ? result - 1 : 0;
-            score.textContent = result;
-            gemPoints = 0;
-            lifes--;
-            lifes_value.textContent = lifes;
-            if (lifes == 0) {
-                result_score_value.textContent = result;
-                cover.style.display = "block";
-                result_box.style.display = "block";
-                block_game = true;
+    // Update the player position  when arrive at the water or hit a bug
+    update() {
+      // if arrive to the water
+      if (this.y < 57) {
+          this.start();
+          result += gemPoints;
+          gemPoints = 0;
+          score.textContent = result;
+          allGem.forEach(function(gem) {
+              gem.start();
+          });
+          // if arrive at 26/61/101 point add a bug
+          if (result > 25 && allEnemies.length < 4) {
+              bugs_value.textContent++;
+              allEnemies.push(new Enemy());
+          } else if (result > 60 && allEnemies.length < 5) {
+              bugs_value.textContent++;
+              allEnemies.push(new Enemy());
+          } else if (result > 100 && allEnemies.length < 6) {
+              bugs_value.textContent++;
+              allEnemies.push(new Enemy());
+          }
+      }
+
+      allEnemies.forEach(function(enemie) {
+          //collisions control
+          if(enemie.y == this.y && enemie.x > (this.x - 50) && enemie.x < (this.x + 50)){
+              this.start();
+              result = result > 0 ? result - 1 : 0;
+              score.textContent = result;
+              gemPoints = 0;
+              lifes--;
+              lifes_value.textContent = lifes;
+              // if lifes are finished
+              if (lifes === 0) {
+                  result_score_value.textContent = result;
+                  cover.style.display = "block";
+                  result_box.style.display = "block";
+                  block_game = true;
+              }
+          }
+      }, this);
+    }
+
+    // Handle input for player's movement
+    // Parameter: direction, a string with the direction clicked
+    handleInput(direction) {
+        if (block_game === false) {
+            switch(direction) {
+                case "left":
+                    if (this.x > 0)
+                        this.x -= 101;
+                    break;
+                case "right":
+                    if (this.x < 404)
+                        this.x += 101;
+                    break;
+                case "up":
+                    if (this.y > 0)
+                        this.y -= 83;
+                    break;
+                case "down":
+                    if (this.y < 389)
+                        this.y += 83;
+                    break;
             }
         }
-    }, this);
-};
-
-// Draw the player on the screen
-Player.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
-
-// Handle input for player's movement
-// Parameter: direction, a string with the direction clicked
-Player.prototype.handleInput = function(direction) {
-    if (block_game == false) {
-        switch(direction) {
-            case "left":
-                if (this.x > 0)
-                    this.x -= 101;
-                break;
-            case "right":
-                if (this.x < 404)
-                    this.x += 101;
-                break;
-            case "up":
-                if (this.y > 0)
-                    this.y -= 83;
-                break;
-            case "down":
-                if (this.y < 389)
-                    this.y += 83;
-                break;
-        }
     }
-};
 
-// Place player in the start position
-Player.prototype.start = function() {
-    this.x = 202;
-    this.y = 389;
-};
+    // Place player in the start position
+    start() {
+        this.x = 202;
+        this.y = 389;
+    }
+}
 
-// Cristals
-const Gem = function() {
-    this.start();
-};
-
-// Place the cristals
-Gem.prototype.update = function() {
-    if (allGem[0].x == allGem[1].x && allGem[0].y == allGem[1].y) {
+// Gems
+class Gem extends Entity {
+    constructor() {
+        super();
         this.start();
     }
-    if (allGem[1].y < allGem[0].y) {
-        let tmpGem = allGem[0];
-        allGem[0] = allGem[1];
-        allGem[1] = tmpGem;
-    }
-    if (this.x == player.x && this.y == player.y) {
-        switch(this.sprite) {
-            case possibleGem[0]:
-                gemPoints += 1;
-                break;
-            case possibleGem[1]:
-                gemPoints += 3;
-                break;
-            case possibleGem[2]:
-                gemPoints += 8;
-                break;
+
+    // Place the Gems
+    update() {
+        // controll if the gems are in the same place
+        if (allGem[0].x == allGem[1].x && allGem[0].y == allGem[1].y) {
+            this.start();
         }
-        this.x += 1000;
-        this.y += 1000;
+        // switch the gems when are one on the other and have a wrong perspective
+        if (allGem[1].x == allGem[0].x && allGem[1].y < allGem[0].y) {
+            let tmpGem = allGem[0];
+            allGem[0] = allGem[1];
+            allGem[1] = tmpGem;
+        }
+        //collisions control
+        if (this.x == player.x && this.y == player.y) {
+            switch(this.sprite) {
+                case possibleGem[0]:
+                    gemPoints += 1;
+                    break;
+                case possibleGem[1]:
+                    gemPoints += 3;
+                    break;
+                case possibleGem[2]:
+                    gemPoints += 8;
+                    break;
+            }
+            this.x += 1000;
+            this.y += 1000;
+        }
     }
-};
 
-// Draw the Cristals on the screen
-Gem.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
-
-// Choose ramdomly the cristals
-Gem.prototype.start = function() {
-    randGem = Math.random();
-    if (randGem < 0.9) {
-        this.sprite = randGem < 0.6 ? possibleGem[0] : possibleGem[1];
-    } else {
-        this.sprite = possibleGem[2];
+    // Choose ramdomly the gems
+    start() {
+        let randGem = Math.random();
+        if (randGem < 0.9) {
+            this.sprite = randGem < 0.6 ? possibleGem[0] : possibleGem[1];
+        } else {
+            this.sprite = possibleGem[2];
+        }
+        let randY = Math.random() * 2.99;
+        let randX = Math.random() * 4.99;
+        this.y = possibleY[Math.floor(randY)];
+        this.x = possibleX[Math.floor(randX)];
     }
-    randY = Math.random() * 2.99;
-    randX = Math.random() * 4.99;
-    this.y = possibleY[Math.floor(randY)];
-    this.x = possibleX[Math.floor(randX)];
-};
+}
 
 let allEnemies = declareEnemies(3);
 const player = new Player();
