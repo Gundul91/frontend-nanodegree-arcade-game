@@ -60,7 +60,7 @@ class Player extends Entity {
     update() {
         // if arrive to the water
         if (this.y < 57) {
-            createjs.Sound.play(assetsPath + sounds[4].src);
+            createjs.Sound.play(assetsPath + sounds[3].src);
             this.start();
             result += gemPoints;
             gemPoints = 0;
@@ -84,7 +84,7 @@ class Player extends Entity {
         allEnemies.forEach(function(enemie) {
             //collisions control
             if(enemie.y == this.y && enemie.x > (this.x - 50) && enemie.x < (this.x + 50)){
-                createjs.Sound.play(assetsPath + sounds[3].src);
+                createjs.Sound.play(assetsPath + sounds[2].src);
                 this.start();
                 result = result > 0 ? result - 1 : 0;
                 score.textContent = result;
@@ -93,7 +93,7 @@ class Player extends Entity {
                 lifes_value.textContent = lifes;
                 // if lifes are finished
                 if (lifes === 0) {
-                    createjs.Sound.play(assetsPath + sounds[1].src);
+                    createjs.Sound.play(assetsPath + sounds[0].src);
                     result_score_value.textContent = result;
                     cover.style.display = "block";
                     result_box.style.display = "block";
@@ -156,7 +156,7 @@ class Gem extends Entity {
         }
         //collisions control
         if (this.x == player.x && this.y == player.y) {
-            createjs.Sound.play(assetsPath + sounds[2].src);
+            createjs.Sound.play(assetsPath + sounds[1].src);
             switch(this.sprite) {
             case possibleGem[0]:
                 gemPoints += 1;
@@ -230,20 +230,11 @@ function initSounds() {
     if (!createjs.Sound.initializeDefaultPlugins()) { return; }
 
     sounds = [
-        {src: "happy.mp3", id: "music"},
         {src: "applause.wav", id: "end"},
         {src: "gem.wav", id: "gem"},
         {src: "hit.mp3", id: "bug"},
         {src: "water.wav", id: "water"}
     ];
     createjs.Sound.alternateExtensions = ["mp3"];	// add other extensions to try loading if the src file extension is not supported
-    createjs.Sound.addEventListener("fileload", handleLoad);
     createjs.Sound.registerSounds(sounds, assetsPath);
-}
-
-// music
-function handleLoad(event) {
-  // set the music volume and loop
-  const props = new createjs.PlayPropsConfig().set({interrupt: createjs.Sound.INTERRUPT_ANY, loop: -1, volume: 0.2});
-  createjs.Sound.play(assetsPath + sounds[0].src, props);
 }
