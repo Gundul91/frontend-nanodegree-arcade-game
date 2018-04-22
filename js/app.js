@@ -244,6 +244,6 @@ function initSounds() {
 // music
 function handleLoad(event) {
   // set the music volume and loop
-  const props = new createjs.PlayPropsConfig().set({interrupt: createjs.Sound.INTERRUPT_ANY, loop: -1, volume: 0.3});
+  const props = new createjs.PlayPropsConfig().set({interrupt: createjs.Sound.INTERRUPT_ANY, loop: -1, volume: 0.2});
   createjs.Sound.play(assetsPath + sounds[0].src, props);
 }
