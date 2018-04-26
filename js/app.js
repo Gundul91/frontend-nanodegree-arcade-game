@@ -7,6 +7,8 @@ let gemPoints = 0;
 let result = 0;
 let lifes = 3;
 let block_game = false;
+let assetsPath = "sounds/";
+let sounds = [];
 
 const result_box = document.querySelector(".result");
 
@@ -58,6 +60,7 @@ class Player extends Entity {
     update() {
         // if arrive to the water
         if (this.y < 57) {
+            createjs.Sound.play(assetsPath + sounds[3].src);
             this.start();
             result += gemPoints;
             gemPoints = 0;
@@ -81,6 +84,7 @@ class Player extends Entity {
         allEnemies.forEach(function(enemie) {
             //collisions control
             if(enemie.y == this.y && enemie.x > (this.x - 50) && enemie.x < (this.x + 50)){
+                createjs.Sound.play(assetsPath + sounds[2].src);
                 this.start();
                 result = result > 0 ? result - 1 : 0;
                 score.textContent = result;
@@ -89,6 +93,7 @@ class Player extends Entity {
                 lifes_value.textContent = lifes;
                 // if lifes are finished
                 if (lifes === 0) {
+                    createjs.Sound.play(assetsPath + sounds[0].src);
                     result_score_value.textContent = result;
                     cover.style.display = "block";
                     result_box.style.display = "block";
@@ -151,6 +156,7 @@ class Gem extends Entity {
         }
         //collisions control
         if (this.x == player.x && this.y == player.y) {
+            createjs.Sound.play(assetsPath + sounds[1].src);
             switch(this.sprite) {
             case possibleGem[0]:
                 gemPoints += 1;
@@ -218,22 +224,17 @@ avatarSelector.addEventListener("click", function(e) {
     this.style.display = "none";
 });
 
-function initSounds(){
+// inizialize all the sounds when the body onload event trigger
+function initSounds() {
     // if initializeDefaultPlugins returns false, we cannot play sound in this browser
     if (!createjs.Sound.initializeDefaultPlugins()) { return; }
 
-    var assetsPath = "sounds/";
-    var sounds = [
-        {src: "Snowfall.ogg", id: "music"},
-        {src: "applause.wav", id: "end"}
+    sounds = [
+        {src: "applause.wav", id: "end"},
+        {src: "gem.wav", id: "gem"},
+        {src: "hit.mp3", id: "bug"},
+        {src: "water.wav", id: "water"}
     ];
     createjs.Sound.alternateExtensions = ["mp3"];	// add other extensions to try loading if the src file extension is not supported
-    createjs.Sound.addEventListener("fileload", handleLoad);
-    createjs.Sound.registerSounds(sounds,assetsPath);
-}
-
-
-function handleLoad(event) {
-  createjs.Sound.play("sounds/Snowfall.ogg");
-  //createjs.Sound.play(event.src);
+    createjs.Sound.registerSounds(sounds, assetsPath);
 }
